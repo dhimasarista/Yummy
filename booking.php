@@ -39,8 +39,8 @@ $mysqli->close();
 </head>
 
 <body>
-    <div class="ui container">
-        <h2 class="ui header">Booking Table</h2>
+    <div class="ui container" style="padding-top: 20px;">
+        <h2 class="ui header"><a href="index.php">Back to Home</a></h2>
         <table id="bookingTable" class="ui celled table">
             <thead>
                 <tr>

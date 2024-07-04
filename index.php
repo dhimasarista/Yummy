@@ -66,7 +66,7 @@ session_start();
       </nav>
 
       <?php if (isset($_SESSION['username'])) : ?>
-        <a class="btn-book-a-table" href="#"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
+        <a class="btn-book-a-table" href="/booking.php"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
       <?php else : ?>
         <a class="btn-book-a-table" href="/login.php">Login</a>
       <?php endif; ?>
@@ -829,41 +829,41 @@ session_start();
           <div class="col-lg-4 reservation-img" style="background-image: url(assets/img/reservation.jpg);" data-aos="zoom-out" data-aos-delay="200"></div>
 
           <div class="col-lg-8 d-flex align-items-center reservation-form-bg">
-            <form action="post_booking.php" method="post" role="form" class="php-email-form" data-aos="fade-up" data-aos-delay="100">
+            <form id="bookingForm" action="post_booking.php" method="post" role="form" class="php-email-form" data-aos="fade-up" data-aos-delay="100">
               <div class="row gy-4">
                 <div class="col-lg-4 col-md-6">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                  <input type="text" required name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
                   <div class="validate"></div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email">
+                  <input type="email" class="form-control" required name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email">
                   <div class="validate"></div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                  <input type="text" class="form-control" name="phone" id="phone" placeholder="Your Phone" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                  <input type="text" class="form-control" required name="phone" id="phone" placeholder="Your Phone" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
                   <div class="validate"></div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                  <input type="text" name="date" class="form-control" id="date" placeholder="Date" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                  <input type="text" required name="date" class="form-control" id="date" placeholder="Date" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
                   <div class="validate"></div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                  <input type="text" class="form-control" name="time" id="time" placeholder="Time" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                  <input type="text" class="form-control" required name="time" id="time" placeholder="Time" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
                   <div class="validate"></div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                  <input type="number" class="form-control" name="people" id="people" placeholder="# of people" data-rule="minlen:1" data-msg="Please enter at least 1 chars">
+                  <input type="number" class="form-control" required name="people" id="people" placeholder="# of people" data-rule="minlen:1" data-msg="Please enter at least 1 chars">
                   <div class="validate"></div>
                 </div>
               </div>
-              <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message"></textarea>
+              <div class="form-group mt-3 mb-5">
+                <textarea class="form-control" required name="message" rows="5" placeholder="Message"></textarea>
                 <div class="validate"></div>
               </div>
               <div class="mb-3 loading">
                 <div class="error-message"></div>
-                <?php if (!empty($feedback)) : ?>
-                  <div class="sent-message"><?php echo $feedback; ?></div>
+                <?php if (!empty($_GET['feedback'])) : ?>
+                  <div class="sent-message"><?php echo htmlspecialchars($_GET['feedback']); ?></div>
                 <?php endif; ?>
               </div>
               <div class="text-center"><button type="submit">Book a Table</button></div>
@@ -872,6 +872,38 @@ session_start();
         </div>
       </div>
     </section>
+    <script>
+      document.getElementById('bookingForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah pengiriman form default
+
+        var formData = new FormData(this);
+
+        fetch('post_booking.php', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.text())
+          .then(data => {
+            Swal.fire({
+              title: 'Success!',
+              text: 'Your booking request was sent. We will call back or send an Email to confirm your reservation. Thank you!',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            }).then(() => {
+              window.location.reload(); // Memuat ulang halaman setelah menutup alert
+            });
+          })
+          .catch(error => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error processing your request. Please try again later.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          });
+      });
+    </script>
+
 
 
 
@@ -1061,9 +1093,8 @@ session_start();
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-
-
+  <!-- <script src="assets/vendor/php-email-form/validate.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="assets/js/main.js"></script>
 
 </body>
