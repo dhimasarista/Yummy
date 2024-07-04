@@ -2,6 +2,25 @@
 include "config/koneksi.php";
 session_start();
 $_SESSION['username'] = null;
+
+$username = 'admin';
+$password = 'admin123';
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+$query = "SELECT * FROM user WHERE username = ?";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    $query = "INSERT INTO user (username, password) VALUES (?, ?)";
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param("ss", $username, $hashed_password);
+    $stmt->execute();
+}
+
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">

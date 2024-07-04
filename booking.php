@@ -11,7 +11,7 @@ if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
 }
 
 // Fetch data from database
-$sql = "SELECT id, name, email, phone, date, time, people, message FROM booking_table";
+$sql = "SELECT id, name, email, phone, date, time, people, status, message FROM booking_table";
 $result = $mysqli->query($sql);
 
 $data = array();
@@ -52,6 +52,7 @@ $mysqli->close();
                     <th>Time</th>
                     <th>People</th>
                     <th>Message</th>
+                    <th>Order Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,6 +66,15 @@ $mysqli->close();
                         <td><?php echo $row['time']; ?></td>
                         <td><?php echo $row['people']; ?></td>
                         <td><?php echo $row['message']; ?></td>
+                        <td>
+                        <?php 
+                            if ($row['status'] === 1) {
+                                echo "Success";
+                            } else {
+                                echo "Pending";
+                            }
+                        ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
